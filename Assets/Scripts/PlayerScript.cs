@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     public GameObject attackBox;
     [HideInInspector] public int combo = 1;
     [HideInInspector] public bool isAttack = false;
+    public float attackAddForce = 300.0f;
 
     void Start()
     {
@@ -184,6 +185,7 @@ public class Player : MonoBehaviour
                         Invoke(nameof(CreatCombo1AttackBox), 0.4f);
                         Invoke(nameof(AttackEnd), 0.5f);
                         combo = 2;
+                        rb.AddForce(new Vector2((isRight ? 1 : -1) * attackAddForce, 0));
                         return;
                     }
                 case 2:
@@ -192,6 +194,7 @@ public class Player : MonoBehaviour
                         Invoke(nameof(CreatCombo2AttackBox), 0.2f);
                         Invoke(nameof(AttackEnd), 0.35f);
                         combo = 3;
+                        rb.AddForce(new Vector2((isRight ? 1 : -1) * attackAddForce, 0));
                         return;
                     }
                 case 3:
@@ -200,6 +203,7 @@ public class Player : MonoBehaviour
                         Invoke(nameof(CreatCombo3AttackBox), 0.3f);
                         Invoke(nameof(AttackEnd), 0.5f);
                         combo = 1;
+                        rb.AddForce(new Vector2((isRight ? 1 : -1) * attackAddForce, 0));
                         return;
                     }
             }

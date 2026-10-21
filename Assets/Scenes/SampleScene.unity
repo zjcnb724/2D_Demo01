@@ -242,6 +242,7 @@ MonoBehaviour:
   attackBox: {fileID: 4909509805712139133, guid: 2791882ab1e3d0243a6313e0a3e1899b, type: 3}
   combo: 1
   isAttack: 0
+  attackAddForce: 300
 --- !u!4 &11103397
 Transform:
   m_ObjectHideFlags: 0
@@ -1165,6 +1166,12 @@ MonoBehaviour:
   player: {fileID: 0}
   attackTime: 1.5
   attackCoolTime: 3
+  HPMax: 100
+  HPNow: 100
+  getHitTime: 1
+  isGetHit: 0
+  getHitAddForce: 300
+  EnemyAndPosition: {fileID: 237985750}
 --- !u!50 &1553049585
 Rigidbody2D:
   serializedVersion: 4

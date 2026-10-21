@@ -46,6 +46,8 @@ public class EnemyBase : MonoBehaviour
     [Header("Enemy GetHit")]
     public float getHitTime = 0.5f;
     [HideInInspector] public bool isGetHit = false;
+    public float getHitAddForce = 300.0f;
+    public GameObject EnemyAndPosition;
     public virtual void Start()
     {
         PatrolEnter();
@@ -161,7 +163,7 @@ public class EnemyBase : MonoBehaviour
     }
     public virtual void AttackUpdate()
     {
-        if (canAttack && !isAttacking)
+        if (canAttack && !isAttacking && !isGetHit)
         {
             canAttack = false;
             isAttacking = true;
@@ -197,24 +199,42 @@ public class EnemyBase : MonoBehaviour
     public virtual void GetHitEnter()
     {
         canMove = false;
+        CancelInvoke(nameof(ChangeStateToPursuit));
+        enemyAnimator.SetBool("GetHit", true);
+        enemyAnimator.SetBool("isRun", false);
+        Invoke(nameof(ChangeStateToPursuit), getHitTime);
+        if(player != null)
+        {
+            if (player.transform.position.x <= transform.position.x)
+            {
+                rb.AddForce(new Vector2(getHitAddForce, 0));
+            }
+            else
+            {
+                rb.AddForce(new Vector2(-getHitAddForce, 0));
+            }
+        }
     }
     public virtual void GetHitUpdate()
     {
         if (!isGetHit)
         {
             isGetHit = true;
-            enemyAnimator.SetBool("GetHit", true);
-            Invoke(nameof(SetIsGetHit),getHitTime);
         }
     }
     public virtual void GetHitExit()
     {
+        isGetHit = false;
         enemyAnimator.SetBool("GetHit", false);
     }
     //ËÀÍö
     public virtual void DeathEnter()
     {
-
+        CancelInvoke(nameof(ChangeStateToPursuit));
+        enemyAnimator.SetBool("isRun", false);
+        enemyAnimator.SetTrigger("isDead");
+        canMove = false;
+        Destroy(EnemyAndPosition, 3.0f);
     }
     public virtual void DeathUpdate()
     {
@@ -258,13 +278,19 @@ public class EnemyBase : MonoBehaviour
 
     public virtual void FindPlayer(GameObject mainPlayer)
     {
-        player = mainPlayer;
-        ChangecurrentState(EnemyState.Pursuit);
+        if (currentState != EnemyState.Death)
+        {
+            player = mainPlayer;
+            ChangecurrentState(EnemyState.Pursuit);
+        }
     }
 
     public virtual void PlayerOut()
     {
-        ChangecurrentState(EnemyState.Patrol);
+        if (currentState != EnemyState.Death)
+        {
+            ChangecurrentState(EnemyState.Patrol);
+        }
     }
 
     public virtual void SetCanAttack()
@@ -283,13 +309,19 @@ public class EnemyBase : MonoBehaviour
         {
             ChangecurrentState(EnemyState.GetHit);
             HPNow = HPNow - demage;
+            if(HPNow <= 0)
+            {
+                ChangecurrentState(EnemyState.Death);
+            }
         }
     }
 
-    public virtual void SetIsGetHit()
+    public virtual void ChangeStateToPursuit()
     {
-        isGetHit = false;
-        ChangecurrentState(EnemyState.Pursuit);
+        if(currentState != EnemyState.Death)
+        {
+            ChangecurrentState(EnemyState.Pursuit);
+        }
     }
 
 }
