@@ -336,16 +336,19 @@ public class EnemyBase : MonoBehaviour
     {
         if(currentState != EnemyState.Death && currentState != EnemyState.GetHit)
         {
+            GameObject go;
             if (isRight)
             {
-                GameObject go = Instantiate(attackBox, attackPoint12.position, attackPoint12.rotation, transform);
+                go = Instantiate(attackBox, attackPoint12.position, attackPoint12.rotation, transform);
                 go.transform.localScale = attackPoint12.localScale;
             }
             else
             {
-                GameObject go = Instantiate(attackBox, attackPoint1.position, attackPoint1.rotation, transform);
+                go = Instantiate(attackBox, attackPoint1.position, attackPoint1.rotation, transform);
                 go.transform.localScale = attackPoint1.localScale;
             }
+            EnemyAttackBox enemyAttackBox = go.GetComponent<EnemyAttackBox>();
+            enemyAttackBox.demage = Mathf.Round( ATK * Random.Range(0.8f, 1.2f));
         }
     }
 

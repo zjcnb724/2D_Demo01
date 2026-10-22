@@ -44,6 +44,9 @@ public class Player : MonoBehaviour
     public float HPNow = 100f;
     public float ATK = 10f;
 
+    [Header("Player Dead")]
+    public bool isDead = false;
+
     void Start()
     {
         Application.targetFrameRate = 60;
@@ -191,7 +194,7 @@ public class Player : MonoBehaviour
                         Invoke(nameof(CreatCombo1AttackBox), 0.4f);
                         Invoke(nameof(AttackEnd), 0.5f);
                         combo = 2;
-                        rb.AddForce(new Vector2((isRight ? 1 : -1) * attackAddForce, 0));
+                        rb.AddForce(new Vector2((isRight ? 1 : -1) * attackAddForce * 1.1f, 0));
                         return;
                     }
                 case 2:
@@ -200,7 +203,7 @@ public class Player : MonoBehaviour
                         Invoke(nameof(CreatCombo2AttackBox), 0.2f);
                         Invoke(nameof(AttackEnd), 0.35f);
                         combo = 3;
-                        rb.AddForce(new Vector2((isRight ? 1 : -1) * attackAddForce, 0));
+                        rb.AddForce(new Vector2((isRight ? 1 : -1) * attackAddForce * 0.8f, 0));
                         return;
                     }
                 case 3:
@@ -209,7 +212,7 @@ public class Player : MonoBehaviour
                         Invoke(nameof(CreatCombo3AttackBox), 0.3f);
                         Invoke(nameof(AttackEnd), 0.5f);
                         combo = 1;
-                        rb.AddForce(new Vector2((isRight ? 1 : -1) * attackAddForce, 0));
+                        rb.AddForce(new Vector2((isRight ? 1 : -1) * attackAddForce * 1.3f, 0));
                         return;
                     }
             }
@@ -228,48 +231,72 @@ public class Player : MonoBehaviour
 
     public void CreatCombo1AttackBox()
     {
+        GameObject go;
         if (isRight)
         {
-            GameObject go = Instantiate(attackBox, attackPoint1.position, attackPoint1.rotation,transform);
+            go = Instantiate(attackBox, attackPoint1.position, attackPoint1.rotation,transform);
             go.transform.localScale = attackPoint1.localScale;
         }
         else
         {
-            GameObject go = Instantiate(attackBox, attackPoint12.position, attackPoint12.rotation,transform);
+            go = Instantiate(attackBox, attackPoint12.position, attackPoint12.rotation,transform);
             go.transform.localScale = attackPoint12.localScale;
         }
+        PlayerAttackBox attackBoxScript = go.GetComponent<PlayerAttackBox>();
+        attackBoxScript.demage = ATK * 1.5f;
     }
 
     public void CreatCombo2AttackBox()
     {
+        GameObject go;
         if (isRight)
         {
-            GameObject go = Instantiate(attackBox, attackPoint2.position, attackPoint2.rotation,transform);
+            go = Instantiate(attackBox, attackPoint2.position, attackPoint2.rotation,transform);
             go.transform.localScale = attackPoint2.localScale;
         }
         else
         {
-            GameObject go = Instantiate(attackBox, attackPoint22.position, attackPoint22.rotation,transform);
+            go = Instantiate(attackBox, attackPoint22.position, attackPoint22.rotation,transform);
             go.transform.localScale = attackPoint22.localScale;
         }
+        PlayerAttackBox attackBoxScript = go.GetComponent<PlayerAttackBox>();
+        attackBoxScript.demage = ATK * 1.2f;
     }
 
     public void CreatCombo3AttackBox()
     {
+        GameObject go;
         if (isRight)
         {
-            GameObject go = Instantiate(attackBox, attackPoint3.position, attackPoint3.rotation, transform);
+            go = Instantiate(attackBox, attackPoint3.position, attackPoint3.rotation, transform);
             go.transform.localScale = attackPoint3.localScale;
         }
         else
         {
-            GameObject go = Instantiate(attackBox, attackPoint32.position, attackPoint32.rotation, transform);
+            go = Instantiate(attackBox, attackPoint32.position, attackPoint32.rotation, transform);
             go.transform.localScale = attackPoint32.localScale;
         }
+        PlayerAttackBox attackBoxScript = go.GetComponent<PlayerAttackBox>();
+        attackBoxScript.demage = ATK * 1.7f;
     }
 
     public void GetHit(float demage)
     {
-
+        if (!isDead)
+        {
+            playerAnimator.SetBool("isGetHit", true);
+            HPNow = HPNow - demage;
+            Invoke(nameof(GetHitEnd), 0.5f);
+        }
+        if(HPNow <= 0)
+        {
+            isDead = true;
+        }
     }
+
+    public void GetHitEnd()
+    {
+        playerAnimator.SetBool("isGetHit", false);
+    }
+
 }
