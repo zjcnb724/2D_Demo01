@@ -36,12 +36,17 @@ public class EnemyBase : MonoBehaviour
     [Header("Enemy Attack")]
     public float attackTime = 0.5f;
     public float attackCoolTime = 2.0f;
+    public float attackCreatBoxTime = 0.6f;
     private bool canAttack = true;
     private bool isAttacking = false;
+    public GameObject attackBox;
+    public Transform attackPoint1;
+    public Transform attackPoint12;
 
-    [Header("Enemy HP")]
-    public float HPMax = 100f;
-    [HideInInspector] public float HPNow = 100f;
+    [Header("Enemy Attributes")]
+    public float HP = 100f;
+    public float HPNow = 100f;
+    public float ATK = 10f;
 
     [Header("Enemy GetHit")]
     public float getHitTime = 0.5f;
@@ -51,7 +56,7 @@ public class EnemyBase : MonoBehaviour
     public virtual void Start()
     {
         PatrolEnter();
-        HPNow = HPMax;
+        HPNow = HP;
     }
 
     public virtual void Update()
@@ -168,6 +173,7 @@ public class EnemyBase : MonoBehaviour
             canAttack = false;
             isAttacking = true;
             enemyAnimator.SetTrigger("Attack1");
+            Invoke(nameof(CreatAttackBox), attackCreatBoxTime);
             Invoke(nameof(SetCanAttack),attackCoolTime);
             Invoke(nameof(SetIsAttacking), attackTime);
         }
@@ -199,6 +205,7 @@ public class EnemyBase : MonoBehaviour
     public virtual void GetHitEnter()
     {
         canMove = false;
+        CancelInvoke(nameof(CreatAttackBox));
         CancelInvoke(nameof(ChangeStateToPursuit));
         enemyAnimator.SetBool("GetHit", true);
         enemyAnimator.SetBool("isRun", false);
@@ -230,6 +237,7 @@ public class EnemyBase : MonoBehaviour
     //À¿Õˆ
     public virtual void DeathEnter()
     {
+        CancelInvoke(nameof(CreatAttackBox));
         CancelInvoke(nameof(ChangeStateToPursuit));
         enemyAnimator.SetBool("isRun", false);
         enemyAnimator.SetTrigger("isDead");
@@ -321,6 +329,23 @@ public class EnemyBase : MonoBehaviour
         if(currentState != EnemyState.Death)
         {
             ChangecurrentState(EnemyState.Pursuit);
+        }
+    }
+
+    public virtual void CreatAttackBox()
+    {
+        if(currentState != EnemyState.Death && currentState != EnemyState.GetHit)
+        {
+            if (isRight)
+            {
+                GameObject go = Instantiate(attackBox, attackPoint12.position, attackPoint12.rotation, transform);
+                go.transform.localScale = attackPoint12.localScale;
+            }
+            else
+            {
+                GameObject go = Instantiate(attackBox, attackPoint1.position, attackPoint1.rotation, transform);
+                go.transform.localScale = attackPoint1.localScale;
+            }
         }
     }
 

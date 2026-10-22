@@ -39,9 +39,15 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool isAttack = false;
     public float attackAddForce = 300.0f;
 
+    [Header("Player Attributes")]
+    public float HP = 100f;
+    public float HPNow = 100f;
+    public float ATK = 10f;
+
     void Start()
     {
         Application.targetFrameRate = 60;
+        HPNow = HP;
     }
 
     void Update()
@@ -224,12 +230,12 @@ public class Player : MonoBehaviour
     {
         if (isRight)
         {
-            GameObject go = Instantiate(attackBox, attackPoint1.position, attackPoint1.rotation);
+            GameObject go = Instantiate(attackBox, attackPoint1.position, attackPoint1.rotation,transform);
             go.transform.localScale = attackPoint1.localScale;
         }
         else
         {
-            GameObject go = Instantiate(attackBox, attackPoint12.position, attackPoint12.rotation);
+            GameObject go = Instantiate(attackBox, attackPoint12.position, attackPoint12.rotation,transform);
             go.transform.localScale = attackPoint12.localScale;
         }
     }
@@ -238,12 +244,12 @@ public class Player : MonoBehaviour
     {
         if (isRight)
         {
-            GameObject go = Instantiate(attackBox, attackPoint2.position, attackPoint2.rotation);
+            GameObject go = Instantiate(attackBox, attackPoint2.position, attackPoint2.rotation,transform);
             go.transform.localScale = attackPoint2.localScale;
         }
         else
         {
-            GameObject go = Instantiate(attackBox, attackPoint22.position, attackPoint22.rotation);
+            GameObject go = Instantiate(attackBox, attackPoint22.position, attackPoint22.rotation,transform);
             go.transform.localScale = attackPoint22.localScale;
         }
     }
@@ -252,15 +258,18 @@ public class Player : MonoBehaviour
     {
         if (isRight)
         {
-            GameObject go = Instantiate(attackBox, attackPoint3.position, attackPoint3.rotation);
+            GameObject go = Instantiate(attackBox, attackPoint3.position, attackPoint3.rotation, transform);
             go.transform.localScale = attackPoint3.localScale;
         }
         else
         {
-            GameObject go = Instantiate(attackBox, attackPoint32.position, attackPoint32.rotation);
+            GameObject go = Instantiate(attackBox, attackPoint32.position, attackPoint32.rotation, transform);
             go.transform.localScale = attackPoint32.localScale;
         }
     }
 
+    public void GetHit(float demage)
+    {
 
+    }
 }

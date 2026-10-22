@@ -25,5 +25,4 @@ public class PlayerAttackBox : MonoBehaviour
             enemy.GetHit(demage);
         }
     }
-
 }
