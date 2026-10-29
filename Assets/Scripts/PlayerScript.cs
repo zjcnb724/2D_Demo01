@@ -68,7 +68,8 @@ public class Player : MonoBehaviour
     }
     public void PlayerMove()
     {
-        if (!isAttack) {
+        if (!isAttack && !isDead) 
+        {
             xInput = Input.GetAxisRaw("Horizontal");
             if (xInput > 0)
             {
@@ -91,7 +92,7 @@ public class Player : MonoBehaviour
 
     public void PlayerMoveFix()
     {
-        if (!isAttack)
+        if (!isAttack && !isDead)
         {
             if (isDashing)
             {
@@ -112,7 +113,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGround) 
+            if (isGround && !isDead) 
             {
                 rb.AddForce(new Vector2(rb.velocity.x, jumpForce));
                 playerAnimator.SetTrigger("isJump");
@@ -157,7 +158,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftShift)) 
         {
-            if (!isDashing && canDash)
+            if (!isDashing && canDash && !isDead)
             {
                 isDashing = true;
                 canDash = false;
@@ -181,7 +182,7 @@ public class Player : MonoBehaviour
 
     public void PlayerAttack()
     {
-        if (Input.GetKeyDown(KeyCode.J) && !isAttack && !(isJump || isAir))
+        if (Input.GetKeyDown(KeyCode.J) && !isAttack && !(isJump || isAir) && !isDead)
         {
             isAttack = true;
             CancelInvoke(nameof(ComboReset));
@@ -287,10 +288,12 @@ public class Player : MonoBehaviour
             playerAnimator.SetBool("isGetHit", true);
             HPNow = HPNow - demage;
             Invoke(nameof(GetHitEnd), 0.5f);
-        }
-        if(HPNow <= 0)
-        {
-            isDead = true;
+
+            if (HPNow <= 0)
+            {
+                isDead = true;
+                playerAnimator.SetTrigger("isDead");
+            }
         }
     }
 
