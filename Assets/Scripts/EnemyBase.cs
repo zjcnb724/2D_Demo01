@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Json;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum EnemyState
 {
@@ -53,10 +54,16 @@ public class EnemyBase : MonoBehaviour
     [HideInInspector] public bool isGetHit = false;
     public float getHitAddForce = 300.0f;
     public GameObject EnemyAndPosition;
+    public Slider hpSlider;
+    public Text hpText;
+    public GameObject hpCanvas;
+    public RectTransform demageNumPoint;
+    public GameObject demageNum;
     public virtual void Start()
     {
         PatrolEnter();
         HPNow = HP;
+        hpText.text = HPNow.ToString() + "/" + HP.ToString();
     }
 
     public virtual void Update()
@@ -319,7 +326,18 @@ public class EnemyBase : MonoBehaviour
             HPNow = HPNow - demage;
             if(HPNow <= 0)
             {
+                HPNow = 0;
                 ChangecurrentState(EnemyState.Death);
+                Destroy(hpCanvas,0.5f);
+            }
+            if(hpSlider != null && hpText != null)
+            {
+                hpSlider.value = HPNow / HP;
+                hpText.text = HPNow.ToString() + "/" + HP.ToString();
+                GameObject go = Instantiate(demageNum, demageNumPoint.position,
+                    demageNumPoint.rotation, hpCanvas.transform);
+                go.transform.localScale = demageNumPoint.localScale;
+                go.GetComponent<Text>().text = demage.ToString();
             }
         }
     }
