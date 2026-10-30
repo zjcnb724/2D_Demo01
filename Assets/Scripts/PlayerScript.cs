@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -46,6 +47,10 @@ public class Player : MonoBehaviour
 
     [Header("Player Dead")]
     public bool isDead = false;
+
+    [Header("Player GetHit")]
+    public Slider hpSlider;
+    public Text hpText;
 
     void Start()
     {
