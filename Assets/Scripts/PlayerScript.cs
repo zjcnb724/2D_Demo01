@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -51,11 +52,16 @@ public class Player : MonoBehaviour
     [Header("Player GetHit")]
     public Slider hpSlider;
     public Text hpText;
+    public GameObject hpCanvas;
+    public RectTransform demageNumPoint;
+    public GameObject demageNum;
 
     void Start()
     {
         Application.targetFrameRate = 60;
         HPNow = HP;
+        hpSlider.value = HPNow / HP;
+        hpText.text = HPNow.ToString() + "/" + HP.ToString();
     }
 
     void Update()
@@ -293,12 +299,18 @@ public class Player : MonoBehaviour
             playerAnimator.SetBool("isGetHit", true);
             HPNow = HPNow - demage;
             Invoke(nameof(GetHitEnd), 0.5f);
-
+            GameObject go = Instantiate(demageNum, demageNumPoint.position,
+            demageNumPoint.rotation, hpCanvas.transform);
+            go.transform.localScale = demageNumPoint.localScale;
+            go.GetComponent<Text>().text = demage.ToString();
             if (HPNow <= 0)
             {
                 isDead = true;
+                HPNow = 0;
                 playerAnimator.SetTrigger("isDead");
             }
+            hpSlider.value = HPNow / HP;
+            hpText.text = HPNow.ToString() + "/" + HP.ToString();
         }
     }
 
